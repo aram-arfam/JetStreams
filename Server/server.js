@@ -18,7 +18,7 @@ connectDB();
 app.use(express.json()); //**json**
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "https://jetstreams-ui.onrender.com",
     credentials: true,
   })
 );
