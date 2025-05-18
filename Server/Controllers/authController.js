@@ -86,14 +86,19 @@ export const login = async (req, res) => {
 };
 
 export const logout = async (req, res) => {
-  try {
-    const isProduction = process.env.NODE_ENV !== "development";
-res.clearCookie("token", {
-  httpOnly: true,
-  secure: isProduction,
-  sameSite: isProduction ? "none" : "lax",
-  path: "/", // Match path used when setting
-});
-return res.json({ success: true, message: "Logged Out" });
+  const isProduction = process.env.NODE_ENV !== "development";
+  try { // <<<< THIS IS YOUR TRY BLOCK
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: isProduction ? "none" : "lax",
+      path: "/", // Important to match the path used when setting the cookie
+    });
+    return res.json({ success: true, message: "Logged Out" });
+  } catch (error) { // <<<< YOU ARE LIKELY MISSING THIS CATCH BLOCK OR IT'S MALFORMED
+    console.error("Error during logout:", error); // Good practice to log the error on the server
+    // Send a generic error response to the client
+    return res.status(500).json({ success: false, message: "Logout failed. Please try again." });
   }
 };
+
