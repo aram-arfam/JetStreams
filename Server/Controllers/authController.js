@@ -87,13 +87,13 @@ export const login = async (req, res) => {
 
 export const logout = async (req, res) => {
   try {
-    res.clearCookie("token", {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "development",
-      sameSite: process.env.NODE_ENV === "development" ? "none " : "strict",
-    });
-    return res.json({ success: true, message: "Logged Out" });
-  } catch (error) {
-    return res.json({ success: false, message: error.message });
+    const isProduction = process.env.NODE_ENV !== "development";
+res.clearCookie("token", {
+  httpOnly: true,
+  secure: isProduction,
+  sameSite: isProduction ? "none" : "lax",
+  path: "/", // Match path used when setting
+});
+return res.json({ success: true, message: "Logged Out" });
   }
 };
